@@ -65,8 +65,8 @@ namespace API_CRUD_MURID_PAA.Controllers
         {
             try
             {
-                int kolomTerhapus = context.DeleteMurid(id);
-                if(kolomTerhapus > 0)
+                int barisTerhapus = context.DeleteMurid(id);
+                if(barisTerhapus > 0)
                 {
 
                     return Ok(new { message = $"Data dengan id : {id} berhasil dihapus" });

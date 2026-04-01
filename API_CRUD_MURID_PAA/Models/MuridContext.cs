@@ -65,7 +65,8 @@ namespace API_CRUD_MURID_PAA.Models
         public void UpdateMurid(Murid murid) 
         {
             string query = string.Format(@"UPDATE murids 
-                     SET nama = @nama, tanggal_lahir = @tanggal_lahir, kelas = @kelas ,email = @email, alamat = @alamat 
+                     SET nama = @nama, tanggal_lahir = @tanggal_lahir, kelas = @kelas 
+                        ,email = @email, alamat = @alamat 
                      WHERE id_murid = @id");
 
             try
@@ -95,10 +96,9 @@ namespace API_CRUD_MURID_PAA.Models
             {
                 using NpgsqlCommand cmd = db.GetNpgsqlCommand(query);
                 cmd.Parameters.AddWithValue("@id", id);
-                int kolomTerhapus = cmd.ExecuteNonQuery();
+                int barisTerhapus = cmd.ExecuteNonQuery();
                 db.closeConnection();
-
-                return kolomTerhapus;
+                return barisTerhapus;
             }
             catch (Exception ex)
             {
