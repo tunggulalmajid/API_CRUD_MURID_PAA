@@ -11,6 +11,5 @@ namespace API_CRUD_MURID_PAA.Models
         public string email { get; set; }
         public string alamat { get; set; }
         
-
     }
 }

@@ -70,7 +70,7 @@ namespace API_CRUD_MURID_PAA.Models
 
             try
             {
-                NpgsqlCommand cmd = db.GetNpgsqlCommand(query);
+                using NpgsqlCommand cmd = db.GetNpgsqlCommand(query);
                 cmd.Parameters.AddWithValue("@id", murid.idMurid);
                 cmd.Parameters.AddWithValue("@nama", murid.nama);
                 cmd.Parameters.AddWithValue("@tanggal_lahir", murid.tanggalLahir);
@@ -93,7 +93,7 @@ namespace API_CRUD_MURID_PAA.Models
 
             try
             {
-                NpgsqlCommand cmd = db.GetNpgsqlCommand(query);
+                using NpgsqlCommand cmd = db.GetNpgsqlCommand(query);
                 cmd.Parameters.AddWithValue("@id", id);
                 int kolomTerhapus = cmd.ExecuteNonQuery();
                 db.closeConnection();
