@@ -1,89 +1,47 @@
 ﻿using API_CRUD_MURID_PAA.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API_CRUD_MURID_PAA.Controllers
 {
+    [ApiController]
+    [Route("api/murid")]
+    [Authorize]
     public class MuridController : Controller
     {
-        private string connStr;
         private MuridContext context;
+
         public MuridController(IConfiguration config)
         {
-            this.connStr = config.GetConnectionString("ConnStr");
-            context = new MuridContext(connStr);
+            context = new MuridContext(config.GetConnectionString("ConnStr"));
         }
-        public IActionResult Index()
+
+        [HttpGet]
+        public ActionResult GetAll() => Ok(context.ListMurid());
+
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public ActionResult Tambah([FromBody] Murid m)
         {
-            return View();
+            context.TambahMurid(m);
+            return Ok(new { message = "Data ditambahkan" });
         }
 
-        [HttpGet("/api/murid")]
-        public ActionResult<Murid> GetAllMurid() 
+        [Authorize(Roles = "admin")]
+        [HttpPut("{id}")]
+        public ActionResult Update(int id, [FromBody] Murid m)
         {
-            try
-            {
-                List<Murid> data = context.ListMurid();
-                return Ok(data);
-            }
-            catch (Exception ex) 
-            { 
-                return StatusCode(500, $"Error : {ex.Message}");
-            }
+            m.idMurid = id;
+            context.UpdateMurid(m);
+            return Ok(new { message = "Data diupdate" });
         }
 
-        [HttpPost("/api/murid")]
-        public ActionResult<Murid> tambahMurid([FromBody] Murid murid)
+        [Authorize(Roles = "admin")]
+        [HttpDelete("{id}")]
+        public ActionResult Delete(int id)
         {
-            try
-            {
-                context.TambahMurid(murid);
-                return Ok(new {message = $"Data Murid {murid.nama} berhasil ditambahkan"});
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Gagal : {ex.Message}");
-            }
+            context.DeleteMurid(id);
+            return Ok(new { message = "Data dihapus" });
         }
-
-        [HttpPut("/api/murid/{id}")]
-        public ActionResult<Murid> UpdateMurid(int id, [FromBody] Murid murid)
-        {
-            try
-            {
-                murid.idMurid = id;
-                context.UpdateMurid(murid);
-                return Ok(new { message = $"Data Murid {murid.nama} berhasil diupdate" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Gagal : {ex.Message}");
-            }
-        }
-
-        [HttpDelete("/api/murid/{id}")]
-        public ActionResult DeleteMurid(int id)
-        {
-            try
-            {
-                int barisTerhapus = context.DeleteMurid(id);
-                if(barisTerhapus > 0)
-                {
-
-                    return Ok(new { message = $"Data dengan id : {id} berhasil dihapus" });
-                }
-                else
-                {
-                    return NotFound(new { message = $"Data dengan id : {id} tidak ditemukan" });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Gagal : {ex.Message}");
-            }
-        }
-
-
-
-
     }
 }
